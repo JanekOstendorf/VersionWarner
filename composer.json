@@ -1,0 +1,28 @@
+{
+  "name": "ozzyfant/version-warner",
+  "type": "project",
+  "require": {
+    "twig/twig": "^2.4",
+    "robmorgan/phinx": "^0.8.1",
+    "silex/silex": "~2.0",
+    "knplabs/console-service-provider": "~2.0",
+    "doctrine/dbal": "~2.2",
+    "psr/log": "^1.0.1",
+    "php": "^7.0",
+    "monolog/monolog": "^1.23",
+    "doctrine/orm": "^2.5",
+    "dflydev/doctrine-orm-service-provider": "^2.0"
+  },
+  "license": "MIT License",
+  "autoload": {
+    "psr-4": {
+      "ozzyfant\\VersionWarner\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Janek Ostendorf",
+      "email": "github@ozzyfant.de"
+    }
+  ]
+}
