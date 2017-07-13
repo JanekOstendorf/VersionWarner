@@ -10,7 +10,15 @@ use ozzyfant\VersionWarner\VersionProvider;
 
 class TeamSpeakVersionProvider extends VersionProvider
 {
-    const VERSION_URL = 'https://www.teamspeak.com/versions/server.json';
+    const VERSION_URL = [
+        'server' => 'https://www.teamspeak.com/versions/server.json',
+        'client' => 'https://www.teamspeak.com/versions/client.json'
+    ];
+
+    const TYPES = [
+        'server',
+        'client'
+    ];
 
     const ARCHITECTURES = [
         'x86',
@@ -33,9 +41,12 @@ class TeamSpeakVersionProvider extends VersionProvider
 
     /**
      * Did we already ask the API and have a response saved?
-     * @var bool
+     * @var array
      */
-    protected static $responsePresent = false;
+    protected static $responsePresent = [
+        'server' => false,
+        'client' => false
+    ];
 
     /**
      * @var array
@@ -62,6 +73,13 @@ class TeamSpeakVersionProvider extends VersionProvider
     protected $architecture = 'x86_64';
 
     /**
+     * Type (client, server) to check for
+     * Possible: server, client
+     * @var string
+     */
+    protected $type = 'server';
+
+    /**
      * Is this a valid operating system?
      * @param string $os
      * @return bool
@@ -77,17 +95,17 @@ class TeamSpeakVersionProvider extends VersionProvider
      */
     function getDownloadLink(): string
     {
-        if (isset(self::$latestDownloadLinkCache[$this->os][$this->architecture])) {
-            return self::$latestDownloadLinkCache[$this->os][$this->architecture];
+        if (isset(self::$latestDownloadLinkCache[$this->type][$this->os][$this->architecture])) {
+            return self::$latestDownloadLinkCache[$this->type][$this->os][$this->architecture];
         }
 
-        if (!self::$responsePresent) {
-            self::$lastResponse = json_decode(file_get_contents(self::VERSION_URL), true);
-            self::$responsePresent = true;
+        if (!self::$responsePresent[$this->type]) {
+            self::$lastResponse[$this->type] = json_decode(file_get_contents(self::VERSION_URL[$this->type]), true);
+            self::$responsePresent[$this->type] = true;
         }
 
-        self::$latestDownloadLinkCache[$this->os][$this->architecture] = reset(self::$lastResponse[$this->os][$this->architecture]['mirrors']);
-        return self::$latestDownloadLinkCache[$this->os][$this->architecture];
+        self::$latestDownloadLinkCache[$this->type][$this->os][$this->architecture] = reset(self::$lastResponse[$this->type][$this->os][$this->architecture]['mirrors']);
+        return self::$latestDownloadLinkCache[$this->type][$this->os][$this->architecture];
     }
 
     /**
@@ -96,17 +114,17 @@ class TeamSpeakVersionProvider extends VersionProvider
      */
     function getLatestVersion(): string
     {
-        if (isset(self::$latestVersionCache[$this->os][$this->architecture])) {
-            return self::$latestVersionCache[$this->os][$this->architecture];
+        if (isset(self::$latestVersionCache[$this->type][$this->os][$this->architecture])) {
+            return self::$latestVersionCache[$this->type][$this->os][$this->architecture];
         }
 
-        if (!self::$responsePresent) {
-            self::$lastResponse = json_decode(file_get_contents(self::VERSION_URL), true);
-            self::$responsePresent = true;
+        if (!self::$responsePresent[$this->type]) {
+            self::$lastResponse[$this->type] = json_decode(file_get_contents(self::VERSION_URL[$this->type]), true);
+            self::$responsePresent[$this->type] = true;
         }
 
-        self::$latestVersionCache[$this->os][$this->architecture] = self::$lastResponse[$this->os][$this->architecture]['version'];
-        return self::$latestVersionCache[$this->os][$this->architecture];
+        self::$latestVersionCache[$this->type][$this->os][$this->architecture] = self::$lastResponse[$this->type][$this->os][$this->architecture]['version'];
+        return self::$latestVersionCache[$this->type][$this->os][$this->architecture];
     }
 
     /**
@@ -123,6 +141,10 @@ class TeamSpeakVersionProvider extends VersionProvider
         if (isset($arguments['os']) && self::isValidArchitecture($arguments['os'])) {
             $this->os = $arguments['os'];
         }
+
+        if (isset($arguments['type']) && self::isValidType($arguments['type'])) {
+            $this->type = $arguments['type'];
+        }
     }
 
     /**
@@ -133,6 +155,11 @@ class TeamSpeakVersionProvider extends VersionProvider
     public static function isValidArchitecture(string $architecture): bool
     {
         return in_array($architecture, self::ARCHITECTURES);
+    }
+
+    public static function isValidType(string $type): bool
+    {
+        return in_array($type, self::TYPES);
     }
 
     /**
