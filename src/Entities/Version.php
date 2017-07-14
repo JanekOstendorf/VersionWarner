@@ -59,8 +59,9 @@ class Version implements ITemplateArray
     /**
      * Version constructor.
      * @param $version
-     * @param \DateTime $firstSeen Default: now
-     * @param \DateTime $lastChecked Default: no
+     * @param VersionCheck $check
+     * @param \DateTime $firstSeen   Default: now
+     * @param \DateTime $lastChecked Default: now
      */
     public function __construct($version, VersionCheck $check, \DateTime $firstSeen = null, \DateTime $lastChecked = null)
     {
@@ -97,7 +98,8 @@ class Version implements ITemplateArray
     {
         return [
             'version' => $this->version,
-            'releasedAt' => $this->firstSeen
+            'firstSeen' => $this->firstSeen,
+            'lastChecked' => $this->lastChecked
         ];
     }
 

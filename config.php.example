@@ -1,10 +1,22 @@
 <?php
 return [
+    'debug' => true,
     'database' => [
         'host' => 'localhost',
         'username' => '',
         'password' => '',
         'database' => 'version_warner'
     ],
-    'debug' => false
+    // Configuration for Swiftmailer
+    // see https://silex.symfony.com/doc/2.0/providers/swiftmailer.html
+    'email' => [
+        'host' => '',
+        'port' => 25,
+        'username' => '',
+        'password' => '',
+        // 'tls', 'ssl' or null
+        'encryption' => null,
+        // 'plain', 'login', 'cram-md5' or null
+        'auth_mode' => null
+    ]
 ];

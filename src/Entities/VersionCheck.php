@@ -13,12 +13,12 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use ozzyfant\VersionWarner\ITemplateArray;
+use ozzyfant\VersionWarner\Notification;
 use ozzyfant\VersionWarner\VersionProvider;
 
 /**
  * Class VersionCheck
  * @package ozzyfant\VersionWarner\Entities
- *
  * @ORM\Entity()
  * @ORM\Table(name="checks")
  */
@@ -33,7 +33,7 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(type="integer")
-     * @var boolean
+     * @var integer
      */
     private $id;
 
@@ -73,7 +73,6 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
 
     /**
      * @var Collection
-     *
      * @ORM\OneToMany(targetEntity="Version", mappedBy="check")
      */
     private $versions;
@@ -84,20 +83,22 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
     private $provider;
 
     /**
+     * @var bool
+     */
+    private $isNotifying = false;
+
+    /**
+     * @var Notification
+     */
+    private $notification;
+
+    /**
      * VersionCheck constructor.
      */
     public function __construct()
     {
         $this->providerArguments = new ArrayCollection();
         $this->recipients = new ArrayCollection();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isId(): bool
-    {
-        return $this->id;
     }
 
     /**
@@ -176,15 +177,15 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
                 if (!$this->provider->isNewVersion($lastVersion, $latestVersion)) {
                     $lastVersion->setLastChecked();
                     $this->em->persist($lastVersion);
+                } else {
+                    // we've detected a new version!
+                    $this->versions->add($latestVersion);
+                    $this->em->persist($latestVersion);
+                    $this->isNotifying = true;
+                    $this->notification = new Notification($lastVersion, $latestVersion, $this->provider->getDownloadLink(), $this);
                 }
             } else {
-                /*
-                 * If we either
-                 *   - had no previous versions or
-                 *   - we have a new version seen (implicit because of check for new version above)
-                 * -> save this newly seen version as new
-                 */
-
+                // No previous records. Save a new version
                 $this->versions->add($latestVersion);
                 $this->em->persist($latestVersion);
 
@@ -221,10 +222,8 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
 
     /**
      * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
-     *
      * @param ObjectManager $objectManager
      * @param ClassMetadata $classMetadata
-     *
      * @return void
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
@@ -242,5 +241,21 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
         $lastTimeRun = $this->versions->last()->getLastChecked()->getTimestamp();
         $now = (new \DateTime())->getTimestamp();
         return ((int)($now - $lastTimeRun) >= $this->provider->getMinimalCheckInterval());
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotifying(): bool
+    {
+        return $this->isNotifying;
+    }
+
+    /**
+     * @return Notification
+     */
+    public function getNotification(): Notification
+    {
+        return $this->notification;
     }
 }

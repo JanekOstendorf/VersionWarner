@@ -11,15 +11,16 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
+use ozzyfant\VersionWarner\ITemplateArray;
+use ozzyfant\VersionWarner\Notification;
 
 /**
  * Class Recipient
  * @package ozzyfant\VersionWarner
- *
  * @Entity
  * @Table(name="recipients")
  */
-class Recipient
+class Recipient implements ITemplateArray
 {
     /**
      * @Id
@@ -55,6 +56,11 @@ class Recipient
      * )
      */
     protected $checks;
+
+    /**
+     * @var Notification[]
+     */
+    protected $notifications = [];
 
     public function __construct()
     {
@@ -123,4 +129,35 @@ class Recipient
         return $this->checks;
     }
 
+    /**
+     * @return Notification[]
+     */
+    public function getNotifications(): array
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return Recipient
+     */
+    public function addNotification(Notification $notification): Recipient
+    {
+        $this->notifications[] = $notification;
+        return $this;
+    }
+
+    /**
+     * Returns an array to use with template engines
+     * @return array
+     */
+    public function toTemplateArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'enabled' => $this->enabled
+        ];
+    }
 }
