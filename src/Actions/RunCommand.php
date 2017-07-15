@@ -92,7 +92,7 @@ class RunCommand extends Command
                     $notificationNames[] = $notification->getCheck()->getTitle();
                 }
 
-                $subject = '[Version Warner] New Version' . (sizeof($notificationNames) > 1 ? 's' : '') . ' for ' . join(', ', $notificationNames);
+                $subject = 'New Versions detected';
 
                 // Initialize Twig
                 $html = $this->app->getTemplate()->render('notification.twig', [
@@ -102,15 +102,23 @@ class RunCommand extends Command
                     'subject' => $subject
                 ]);
 
+                $plain = $this->app->getTemplate()->render('notification_plain.twig', [
+                    'notifications' => $notificationsTemplate,
+                    'notificationNames' => $notificationNames,
+                    'recipient' => $recipient->toTemplateArray(),
+                    'subject' => $subject
+                ]);
+
                 $email = \Swift_Message::newInstance()
-                    ->setSubject($subject)
+                    ->setSubject('[Version Warner] ' . $subject)
                     ->setTo($recipient->getEmail())
                     ->setFrom($this->app->getConfig()['email']['sender_address'])
-                    ->setBody($html, 'text/html');
+                    ->setBody($html, 'text/html')
+                    ->addPart($plain, 'text/plain');
 
                 file_put_contents(DIR_ROOT . '/var/tmp/test.html', $html);
 
-                $this->app->getEmail()->send($email, $failed);
+                $this->app->getEmail()->send($email);
 
             }
         }

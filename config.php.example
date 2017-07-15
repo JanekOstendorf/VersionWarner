@@ -21,7 +21,8 @@ return [
             'auth_mode' => 'plain'
         ],
         'sender_address' => 'versions@domain.tld',
-        // Send all messages here. For debug
+        // Send all messages here.
+        // Only works when debug is enabled
         'delivery_addresses' => [
             // 'debug@domain.tld'
         ]
