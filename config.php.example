@@ -10,13 +10,20 @@ return [
     // Configuration for Swiftmailer
     // see https://silex.symfony.com/doc/2.0/providers/swiftmailer.html
     'email' => [
-        'host' => '',
-        'port' => 25,
-        'username' => '',
-        'password' => '',
-        // 'tls', 'ssl' or null
-        'encryption' => null,
-        // 'plain', 'login', 'cram-md5' or null
-        'auth_mode' => null
+        'options' => [
+            'host' => 'mail.domain.tld',
+            'port' => 587,
+            'username' => 'versions@domain.tld',
+            'password' => 'secret',
+            // 'tls', 'ssl' or null
+            'encryption' => 'tls',
+            // 'plain', 'login', 'cram-md5' or null
+            'auth_mode' => 'plain'
+        ],
+        'sender_address' => 'versions@domain.tld',
+        // Send all messages here. For debug
+        'delivery_addresses' => [
+            // 'debug@domain.tld'
+        ]
     ]
 ];

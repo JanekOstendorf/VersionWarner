@@ -78,7 +78,7 @@ class VersionWarner
         $this->app->register(new MonologServiceProvider(), [
             'monolog.name' => 'VersionWarner'
         ]);
-        $this->app->extend('monolog', function (Logger $monolog, Application $app) {
+        $this->app->extend('monolog', function (Logger $monolog) {
             $monolog->pushHandler(new StreamHandler('php://stdout'));
             $monolog->pushHandler(new RotatingFileHandler(DIR_ROOT . '/var/logs/log', 0, Logger::NOTICE));
             return $monolog;
@@ -148,8 +148,9 @@ class VersionWarner
         $this->app->register(new SwiftmailerServiceProvider());
         $this->app['swiftmailer.options'] = $this->config['email']['options'];
         $this->app['swiftmailer.sender_address'] = $this->config['email']['sender_address'];
-        if (DEBUG)
+        if (DEBUG) {
             $this->app['swiftmailer.delivery_addresses'] = $this->config['email']['delivery_addresses'];
+        }
         $this->email = $this->app['mailer'];
     }
 
@@ -172,6 +173,23 @@ class VersionWarner
         $console->add(new RunCommand($this));
         $console->run();
 
+    }
+
+    /**
+     * Flushes the email queue, forcing it to send now
+     */
+    public function flushEmailQueue(): void
+    {
+        $this->app['swiftmailer.spooltransport']->getSpool()
+            ->flushQueue($this->app['swiftmailer.transport']);
+    }
+
+    /**
+     * Flushes all entities
+     */
+    public function flushEm(): void
+    {
+        $this->getEm()->flush();
     }
 
     /**

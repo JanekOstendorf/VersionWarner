@@ -110,11 +110,13 @@ class RunCommand extends Command
 
                 file_put_contents(DIR_ROOT . '/var/tmp/test.html', $html);
 
-                $this->app->getEmail()->send($email);
+                $this->app->getEmail()->send($email, $failed);
+
             }
         }
 
-        $this->app->getEm()->flush();
+        $this->app->flushEm();
+        $this->app->flushEmailQueue();
 
     }
 
