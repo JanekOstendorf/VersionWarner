@@ -1,11 +1,11 @@
 We've detected new version{{ notifications|length > 1 ? 's' }}!
 
 {% for notification in notifications %}
-    {{ notification.check.title }}
+{{ notification.check.title }}
 
-    Old version: {{ notification.oldVersion.version }}
-    New version: {{ notification.newVersion.version }}
-    Download new Version: {{ notification.newVersionDownload }}
+Old version: {{ notification.oldVersion.version }}
+New version: {{ notification.newVersion.version }}
+Download new Version: {{ notification.newVersionDownload }}
 
 
 {% endfor %}

@@ -92,31 +92,33 @@ class RunCommand extends Command
                     $notificationNames[] = $notification->getCheck()->getTitle();
                 }
 
-                $subject = 'New Versions detected';
+                $subject = 'New Version' . (sizeof($recipient->getNotifications()) > 1 ? 's' : '') . ' Detected';
 
                 // Initialize Twig
                 $html = $this->app->getTemplate()->render('notification.twig', [
                     'notifications' => $notificationsTemplate,
                     'notificationNames' => $notificationNames,
                     'recipient' => $recipient->toTemplateArray(),
-                    'subject' => $subject
+                    'subject' => $subject,
+                    'appname' => $this->app->getConfig()['appname']
                 ]);
 
                 $plain = $this->app->getTemplate()->render('notification_plain.twig', [
                     'notifications' => $notificationsTemplate,
                     'notificationNames' => $notificationNames,
                     'recipient' => $recipient->toTemplateArray(),
-                    'subject' => $subject
+                    'subject' => $subject,
+                    'appname' => $this->app->getConfig()['appname']
                 ]);
 
                 $email = \Swift_Message::newInstance()
-                    ->setSubject('[Version Warner] ' . $subject)
+                    ->setSubject('[' . $this->app->getConfig()['appname'] . '] ' . $subject)
                     ->setTo($recipient->getEmail())
-                    ->setFrom($this->app->getConfig()['email']['sender_address'])
+                    ->setFrom([
+                        $this->app->getConfig()['email']['sender_address'] => $this->app->getConfig()['email']['sender_name']
+                    ])
                     ->setBody($html, 'text/html')
                     ->addPart($plain, 'text/plain');
-
-                file_put_contents(DIR_ROOT . '/var/tmp/test.html', $html);
 
                 $this->app->getEmail()->send($email);
 

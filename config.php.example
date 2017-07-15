@@ -1,6 +1,7 @@
 <?php
 return [
     'debug' => true,
+    'appname' => 'Version Warner',
     'database' => [
         'host' => 'localhost',
         'username' => '',
@@ -21,6 +22,7 @@ return [
             'auth_mode' => 'plain'
         ],
         'sender_address' => 'versions@domain.tld',
+        'sender_name' => 'Version Warner',
         // Send all messages here.
         // Only works when debug is enabled
         'delivery_addresses' => [
