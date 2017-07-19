@@ -94,7 +94,7 @@ class VersionWarner
         define('DEBUG', $this->config['debug']);
 
         $dboptions = [
-            'driver' => 'pdo_mysql',
+            'driver' => $this->config['database']['driver'],
             'dbname' => $this->config['database']['database'],
             'host' => $this->config['database']['host'],
             'user' => $this->config['database']['username'],
