@@ -154,7 +154,7 @@ class VersionWarner
         $this->email = $this->app['mailer'];
     }
 
-    public function runConsole(): void
+    public function runConsole()
     {
 
         $this->app->register(new ConsoleServiceProvider(), [
@@ -178,7 +178,7 @@ class VersionWarner
     /**
      * Flushes the email queue, forcing it to send now
      */
-    public function flushEmailQueue(): void
+    public function flushEmailQueue()
     {
         $this->app['swiftmailer.spooltransport']->getSpool()
             ->flushQueue($this->app['swiftmailer.transport']);
@@ -187,7 +187,7 @@ class VersionWarner
     /**
      * Flushes all entities
      */
-    public function flushEm(): void
+    public function flushEm()
     {
         $this->getEm()->flush();
     }
@@ -199,7 +199,6 @@ class VersionWarner
     {
         return $this->logger;
     }
-
     /**
      * @return Recipient[]
      */

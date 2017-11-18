@@ -131,7 +131,7 @@ class TeamSpeakVersionProvider extends VersionProvider
      * Set the arguments provided in the config file
      * @param array $arguments The arguments from the config file
      */
-    function setArguments(array $arguments): void
+    function setArguments(array $arguments)
     {
         // Set architecture and operating system
         if (isset($arguments['architecture']) && self::isValidArchitecture($arguments['architecture'])) {

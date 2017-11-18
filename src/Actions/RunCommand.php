@@ -29,7 +29,7 @@ class RunCommand extends Command
         $this->app = $app;
     }
 
-    protected function configure(): void
+    protected function configure()
     {
         parent::configure();
         $this->setName('run')
@@ -37,7 +37,7 @@ class RunCommand extends Command
             ->setHelp('Use this command for your cron job to run the checks automatically.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Get all enabled checks and run them
         /** @var VersionCheck[] $versionChecks */

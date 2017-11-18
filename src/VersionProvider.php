@@ -26,7 +26,7 @@ abstract class VersionProvider
      * Set the arguments provided in the config file
      * @param array $arguments The arguments from the config file
      */
-    abstract function setArguments(array $arguments): void;
+    abstract function setArguments(array $arguments);
 
     /**
      * How often are we allowed to ask this provider?

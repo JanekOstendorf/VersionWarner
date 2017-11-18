@@ -93,7 +93,7 @@ class MinecraftVersionProvider extends VersionProvider
      * Set the arguments provided in the config file
      * @param array $arguments The arguments from the config file
      */
-    function setArguments(array $arguments): void
+    function setArguments(array $arguments)
     {
         // Only alternative is snapshot. Default is release
         if (isset($arguments['type']) && $arguments['type'] == 'snapshot') {

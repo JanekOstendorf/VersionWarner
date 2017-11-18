@@ -133,7 +133,7 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
         return $this->provider;
     }
 
-    public function initProvider(): void
+    public function initProvider()
     {
         // Try to find the VersionProvider
         $providerName = '\\ozzyfant\\VersionWarner\\VersionProviders\\' . $this->providerName;
@@ -161,7 +161,7 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
         return $this->providerArguments;
     }
 
-    public function runCheck(): void
+    public function runCheck()
     {
         if (!is_null($this->provider)) {
 
