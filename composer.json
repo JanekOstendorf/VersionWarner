@@ -12,7 +12,8 @@
     "monolog/monolog": "^1.23",
     "doctrine/orm": "^2.5",
     "dflydev/doctrine-orm-service-provider": "^2.0",
-    "swiftmailer/swiftmailer": "~5.0"
+    "swiftmailer/swiftmailer": "~5.0",
+    "ext-curl": "*"
   },
   "license": "MIT License",
   "autoload": {
