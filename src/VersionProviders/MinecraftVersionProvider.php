@@ -6,9 +6,9 @@
 namespace ozzyfant\VersionWarner\VersionProviders;
 
 
-use ozzyfant\VersionWarner\VersionProvider;
+use ozzyfant\VersionWarner\HttpVersionProvider;
 
-class MinecraftVersionProvider extends VersionProvider
+class MinecraftVersionProvider extends HttpVersionProvider
 {
     const VERSION_URL = 'https://launchermeta.mojang.com/mc/game/version_manifest.json';
 
@@ -52,7 +52,7 @@ class MinecraftVersionProvider extends VersionProvider
         }
 
         if (!self::$responsePresent) {
-            self::$lastResponse = json_decode(file_get_contents(self::VERSION_URL), true);
+            self::$lastResponse = json_decode(self::queryHttp(self::VERSION_URL), true);
             self::$responsePresent = true;
         }
 
@@ -61,7 +61,7 @@ class MinecraftVersionProvider extends VersionProvider
             array_column($allVersions['versions'], 'id'))];
 
         // Parse the info json-file
-        $info = json_decode(file_get_contents($latestInfo['url']), true);
+        $info = json_decode(self::queryHttp($latestInfo['url']), true);
 
         self::$latestDownloadLinkCache[$this->type] = $info['downloads']['server']['url'];
         return self::$latestDownloadLinkCache[$this->type];
@@ -78,7 +78,7 @@ class MinecraftVersionProvider extends VersionProvider
         }
 
         if (!self::$responsePresent) {
-            self::$lastResponse = json_decode(file_get_contents(self::VERSION_URL), true);
+            self::$lastResponse = json_decode(self::queryHttp(self::VERSION_URL), true);
             self::$responsePresent = true;
         }
 

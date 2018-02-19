@@ -6,9 +6,9 @@
 namespace ozzyfant\VersionWarner\VersionProviders;
 
 
-use ozzyfant\VersionWarner\VersionProvider;
+use ozzyfant\VersionWarner\HttpVersionProvider;
 
-class TeamSpeakVersionProvider extends VersionProvider
+class TeamSpeakVersionProvider extends HttpVersionProvider
 {
     const VERSION_URL = [
         'server' => 'https://www.teamspeak.com/versions/server.json',
@@ -100,7 +100,7 @@ class TeamSpeakVersionProvider extends VersionProvider
         }
 
         if (!self::$responsePresent[$this->type]) {
-            self::$lastResponse[$this->type] = json_decode(file_get_contents(self::VERSION_URL[$this->type]), true);
+            self::$lastResponse[$this->type] = json_decode(self::queryHttp(self::VERSION_URL[$this->type]), true);
             self::$responsePresent[$this->type] = true;
         }
 
@@ -119,7 +119,7 @@ class TeamSpeakVersionProvider extends VersionProvider
         }
 
         if (!self::$responsePresent[$this->type]) {
-            self::$lastResponse[$this->type] = json_decode(file_get_contents(self::VERSION_URL[$this->type]), true);
+            self::$lastResponse[$this->type] = json_decode(self::queryHttp(self::VERSION_URL[$this->type]), true);
             self::$responsePresent[$this->type] = true;
         }
 
