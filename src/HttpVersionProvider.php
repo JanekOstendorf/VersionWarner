@@ -6,7 +6,7 @@
 namespace ozzyfant\VersionWarner;
 
 
-abstract class HttpVersionProvider
+abstract class HttpVersionProvider extends VersionProvider
 {
 
     const DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13';
