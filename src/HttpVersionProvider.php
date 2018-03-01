@@ -29,10 +29,15 @@ abstract class HttpVersionProvider extends VersionProvider
 
         // return the transfer as a string
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch,CURLOPT_USERAGENT,$userAgent);
+        curl_setopt($ch,CURLOPT_USERAGENT, $userAgent);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 
         // $output contains the output string
         $output = curl_exec($ch);
+
+        if ($output === false) {
+            throw new \RuntimeException("Error fetching HTTP response: " . curl_error($ch), curl_errno($ch));
+        }
 
         // close curl resource to free up system resources
         curl_close($ch);
