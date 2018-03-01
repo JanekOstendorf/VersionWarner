@@ -1,10 +1,11 @@
 {#
 
 Available variables:
-notifications       Array of all notifications
-notificationNames   Array of the names of all check notified
-recipient           The recipient this is sent to
-subject             The pre-generated subject for this notification
+notifications            Array of all notifications
+notificationTitles       Array of the names of all check notified
+notificationShortTitles  Array of the short names of all check notified
+recipient                The recipient this is sent to
+subject                  The pre-generated subject for this notification
 
 #}
 
@@ -62,7 +63,7 @@ subject             The pre-generated subject for this notification
 
     <!-- Visually Hidden Preheader Text : BEGIN -->
     <div style="display:none;font-size:1px;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;mso-hide:all;font-family: sans-serif;">
-        New version{{ notifications|length > 1 ? 's' }} for: {{ notificationNames|join(', ') }}
+        New version{{ notifications|length > 1 ? 's' }} for: {{ notificationTitles|join(', ') }}
     </div>
     <!-- Visually Hidden Preheader Text : END -->
 

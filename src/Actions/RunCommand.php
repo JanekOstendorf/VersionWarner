@@ -85,19 +85,24 @@ class RunCommand extends Command
             if (sizeof($recipient->getNotifications()) > 0) {
 
                 $notificationsTemplate = [];
-                $notificationNames = [];
+                $notificationTitles = [];
+                $notificationShortTitles = [];
+
 
                 foreach($recipient->getNotifications() as $notification) {
                     $notificationsTemplate[] = $notification->toTemplateArray();
-                    $notificationNames[] = $notification->getCheck()->getTitle();
+                    $notificationTitles[] = $notification->getCheck()->getTitle();
+                    $notificationShortTitles[] = $notification->getCheck()->getShortTitle();
                 }
 
-                $subject = 'New Version' . (sizeof($recipient->getNotifications()) > 1 ? 's' : '') . ' Detected';
+                $subject = join(', ', $notificationShortTitles);
+                $subject .= ' - New Version' . (sizeof($recipient->getNotifications()) > 1 ? 's' : '');
 
                 // Initialize Twig
                 $html = $this->app->getTemplate()->render('notification.twig', [
                     'notifications' => $notificationsTemplate,
-                    'notificationNames' => $notificationNames,
+                    'notificationTitles' => $notificationTitles,
+                    'notificationShortTitles' => $notificationShortTitles,
                     'recipient' => $recipient->toTemplateArray(),
                     'subject' => $subject,
                     'appname' => $this->app->getConfig()['appname']
@@ -105,7 +110,8 @@ class RunCommand extends Command
 
                 $plain = $this->app->getTemplate()->render('notification_plain.twig', [
                     'notifications' => $notificationsTemplate,
-                    'notificationNames' => $notificationNames,
+                    'notificationTitles' => $notificationTitles,
+                    'notificationShortTitles' => $notificationShortTitles,
                     'recipient' => $recipient->toTemplateArray(),
                     'subject' => $subject,
                     'appname' => $this->app->getConfig()['appname']

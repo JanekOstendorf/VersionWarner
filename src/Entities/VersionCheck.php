@@ -56,6 +56,12 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
     private $title;
 
     /**
+     * @ORM\Column(name="short_title", type="string")
+     * @var string
+     */
+    private $shortTitle;
+
+    /**
      * @ORM\Column(type="string", name="provider")
      */
     private $providerName;
@@ -115,6 +121,18 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShortTitle(): string
+    {
+        if (!$this->shortTitle) {
+            return $this->getTitle();
+        }
+
+        return $this->shortTitle;
     }
 
     /**

@@ -1,3 +1,14 @@
+{#
+
+Available variables:
+notifications            Array of all notifications
+notificationTitles       Array of the names of all check notified
+notificationShortTitles  Array of the short names of all check notified
+recipient                The recipient this is sent to
+subject                  The pre-generated subject for this notification
+
+#}
+
 We've detected new version{{ notifications|length > 1 ? 's' }}!
 
 {% for notification in notifications %}
