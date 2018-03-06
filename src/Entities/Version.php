@@ -136,4 +136,12 @@ class Version implements ITemplateArray
     {
         return $this->check;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getVersion();
+    }
 }

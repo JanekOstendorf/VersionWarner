@@ -87,16 +87,16 @@ class RunCommand extends Command
                 $notificationsTemplate = [];
                 $notificationTitles = [];
                 $notificationShortTitles = [];
-
+                $notificationShortTitleVersion = [];
 
                 foreach($recipient->getNotifications() as $notification) {
                     $notificationsTemplate[] = $notification->toTemplateArray();
                     $notificationTitles[] = $notification->getCheck()->getTitle();
                     $notificationShortTitles[] = $notification->getCheck()->getShortTitle();
+                    $notificationShortTitleVersion[] = $notification->getCheck()->getShortTitle() . ' ' . $notification->getNewVersion();
                 }
 
-                $subject = join(', ', $notificationShortTitles);
-                $subject .= ' - New Version' . (sizeof($recipient->getNotifications()) > 1 ? 's' : '');
+                $subject = join(', ', $notificationShortTitleVersion);
 
                 // Initialize Twig
                 $html = $this->app->getTemplate()->render('notification.twig', [
