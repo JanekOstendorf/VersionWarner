@@ -260,6 +260,10 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
      */
     public function checkRunInterval()
     {
+        if ($this->versions->isEmpty()) {
+            return true;
+        }
+
         $lastTimeRun = $this->versions->last()->getLastChecked()->getTimestamp();
         $now = (new \DateTime())->getTimestamp();
         return ((int)($now - $lastTimeRun) >= $this->provider->getMinimalCheckInterval());
