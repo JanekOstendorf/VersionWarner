@@ -6,6 +6,7 @@
 namespace ozzyfant\VersionWarner\Actions;
 
 use Knp\Command\Command;
+use ozzyfant\VersionWarner\CantFetchVersionException;
 use ozzyfant\VersionWarner\Entities\Recipient;
 use ozzyfant\VersionWarner\Entities\VersionCheck;
 use ozzyfant\VersionWarner\VersionWarner;
@@ -50,7 +51,14 @@ class RunCommand extends Command
 
             // Perform checks when we're in debug and when the minimal time interval is up
             if (DEBUG || $versionCheck->checkRunInterval()) {
-                $versionCheck->runCheck();
+
+                try {
+                    $versionCheck->runCheck();
+                } catch (CantFetchVersionException $e) {
+                    $this->app->getLogger()->warn('Cannot retrieve version for check', ['check' => $versionCheck->getName(), 'exception' => $e]);
+                    continue;
+                }
+
                 $this->app->getEm()->persist($versionCheck);
 
                 if ($versionCheck->isNotifying()) {

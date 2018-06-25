@@ -12,6 +12,7 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use ozzyfant\VersionWarner\CantFetchVersionException;
 use ozzyfant\VersionWarner\ITemplateArray;
 use ozzyfant\VersionWarner\Notification;
 use ozzyfant\VersionWarner\VersionProvider;
@@ -179,6 +180,9 @@ class VersionCheck implements ITemplateArray, ObjectManagerAware
         return $this->providerArguments;
     }
 
+    /**
+     * @throws CantFetchVersionException
+     */
     public function runCheck()
     {
         if (!is_null($this->provider)) {
